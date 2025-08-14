@@ -1,0 +1,42 @@
+/// Permission types supported by the app
+enum AppPermission {
+  camera,
+  microphone,
+  storage,
+  photos,
+  location,
+  locationWhenInUse,
+  locationAlways,
+  contacts,
+  phone,
+  sms,
+  notification,
+  bluetooth,
+  bluetoothScan,
+  bluetoothAdvertise,
+  bluetoothConnect,
+  mediaLibrary,
+  calendarRead,
+  calendarWrite,
+  reminders,
+  sensors,
+  speech,
+  ignoreBatteryOptimizations,
+  requestInstallPackages,
+  systemAlertWindow,
+  criticalAlerts,
+  accessMediaLocation,
+  activityRecognition,
+  unknown,
+}
+
+/// Permission status enum for better type safety
+enum AppPermissionStatus {
+  granted,
+  denied,
+  permanentlyDenied,
+  restricted,
+  limited,
+  provisional,
+  unknown,
+}
