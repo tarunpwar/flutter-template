@@ -386,7 +386,7 @@ class PermissionManager {
       if (!Platform.isAndroid) return false;
 
       final systemPermission = _getPermissionFromAppPermission(permission);
-      return await systemPermission.shouldShowRequestPermissionRationale;
+      return await systemPermission.shouldShowRequestRationale;
     } catch (e) {
       _logError('Error checking rationale for $permission', e);
       return false;
