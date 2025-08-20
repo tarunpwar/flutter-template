@@ -3,8 +3,8 @@ import 'package:flutter_template/core/utils/helpers/connectivity_wrapper.dart';
 import 'package:flutter_template/presentation/home/home_screen.dart';
 
 class AppRouter {
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  // static final GlobalKey<NavigatorState> navigatorKey =
+  //     GlobalKey<NavigatorState>();
 
   static const String loginRoute = '/login';
   static const String homeRoute = '/home';
@@ -38,12 +38,12 @@ class AppRouter {
   }
 
   // Global logout function that can be called from anywhere
-  static void logout() {
-    navigatorKey.currentState?.pushNamedAndRemoveUntil(
-      loginRoute,
-      (route) => false,
-    );
-  }
+  // static void logout() {
+  //   navigatorKey.currentState?.pushNamedAndRemoveUntil(
+  //     loginRoute,
+  //     (route) => false,
+  //   );
+  // }
 }
 
 // Extension methods for navigation
@@ -142,10 +142,10 @@ class ErrorScreen extends StatelessWidget {
               child: Text('Go to Home'),
             ),
             SizedBox(height: 10),
-            TextButton(
-              onPressed: () => AppRouter.logout(),
-              child: Text('Logout'),
-            ),
+            // TextButton(
+            //   onPressed: () => AppRouter.logout(),
+            //   child: Text('Logout'),
+            // ),
           ],
         ),
       ),

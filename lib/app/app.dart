@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/app/theme/app_theme.dart';
+import 'package:flutter_template/core/di/app_dependencies.dart';
 import 'package:flutter_template/core/services/theme_service.dart';
 import 'package:provider/provider.dart';
 
@@ -13,11 +14,11 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeService>(
       builder: (_, theme, _) => MaterialApp(
         title: 'Flutter Template',
-        navigatorKey: AppRouter.navigatorKey,
+        navigatorKey: AppDependencies.navigatorKey,
         darkTheme: AppTheme.darkTheme,
         themeMode: theme.themeMode,
         theme: AppTheme.lightTheme,
-        initialRoute: AppRouter.loginRoute,
+        initialRoute: AppRouter.homeRoute,
         onGenerateRoute: AppRouter.generateRoute,
       ),
     );

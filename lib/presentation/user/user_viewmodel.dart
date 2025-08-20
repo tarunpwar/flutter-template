@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/di/service_locator.dart';
 import '../../features/user/user_model.dart';
 import '../../features/user/user_repository.dart';
 
@@ -9,6 +10,11 @@ class UserViewModel extends ChangeNotifier {
   final UserRepository _userRepository;
 
   UserViewModel(this._userRepository);
+
+  // Factory constructor for global initialization
+  factory UserViewModel.global() {
+    return UserViewModel(sl.get<UserRepository>());
+  }
 
   ViewState _viewState = ViewState.idle;
   String? _errorMessage;
@@ -41,7 +47,7 @@ class UserViewModel extends ChangeNotifier {
 
     try {
       final response = await _userRepository.getUser(userId);
-      
+
       if (response.success && response.data != null) {
         _selectedUser = response.data;
         _setViewState(ViewState.success);
@@ -60,7 +66,7 @@ class UserViewModel extends ChangeNotifier {
 
     try {
       final response = await _userRepository.getUsers(page: page, limit: limit);
-      
+
       if (response.success && response.data != null) {
         _users = response.data!;
         _setViewState(ViewState.success);
@@ -79,7 +85,7 @@ class UserViewModel extends ChangeNotifier {
 
     try {
       final response = await _userRepository.createUser(userData);
-      
+
       if (response.success && response.data != null) {
         _users.add(response.data!);
         _setViewState(ViewState.success);
@@ -101,7 +107,7 @@ class UserViewModel extends ChangeNotifier {
 
     try {
       final response = await _userRepository.updateUser(userId, userData);
-      
+
       if (response.success && response.data != null) {
         final index = _users.indexWhere((user) => user.id == userId);
         if (index != -1) {
@@ -127,7 +133,7 @@ class UserViewModel extends ChangeNotifier {
 
     try {
       final response = await _userRepository.deleteUser(userId);
-      
+
       if (response.success) {
         _users.removeWhere((user) => user.id == userId);
         if (_selectedUser?.id == userId) {

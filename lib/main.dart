@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/app/app.dart';
+import 'package:flutter_template/core/di/service_locator.dart';
 import 'package:flutter_template/presentation/user/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
+import 'core/di/app_dependencies.dart';
 import 'core/services/connectivity_service.dart';
 import 'core/services/storage_service.dart';
 import 'core/services/theme_service.dart';
-import 'dependencies.dart';
+import 'features/user/user_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize services
   await StorageService.instance.init();
+  // Initialize dependencies
+  await AppDependencies.initialize();
 
   runApp(const MainApp());
 }
 
-class MainApp extends StatefulWidget {
+class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
-  @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  late final AppDependencies _dependencies;
-  @override
-  void initState() {
-    super.initState();
-    _dependencies = AppDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +32,7 @@ class _MainAppState extends State<MainApp> {
           create: (_) => ConnectivityService(),
         ),
         Provider<UserViewModel>(
-          create: (_) => UserViewModel(_dependencies.userRepository),
+          create: (_) => UserViewModel(sl.get<UserRepository>()),
         ),
       ],
       child: MyApp(),
