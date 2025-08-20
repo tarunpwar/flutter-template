@@ -49,7 +49,5 @@ class ForbiddenException extends ApiException {
 }
 
 class ValidationException extends ApiException {
-  
-  
    ValidationException( { super.message = "", super.statusCode,super.errors,});
 }
