@@ -1,77 +1,98 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../errors/exceptions.dart';
+class NetworkException implements Exception {
+  final String message;
+  final int? statusCode;
+  final Map<String, dynamic>? errors;
+
+  const NetworkException({required this.message, this.statusCode, this.errors});
+
+  @override
+  String toString() => message;
+}
 
 class ErrorInterceptor extends Interceptor {
+  final VoidCallback? onUnauthorized;
+  final VoidCallback? onClearUserDetails;
+
+  ErrorInterceptor({this.onUnauthorized, this.onClearUserDetails});
+
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    String errorMessage = _getErrorMessage(err);
-    
-    if (kDebugMode) {
-      print('API Error: $errorMessage');
-      print('Status Code: ${err.response?.statusCode}');
-      print('Request URL: ${err.requestOptions.uri}');
+    // Handle 401 unauthorized
+    if (err.response?.statusCode == 401) {
+      onClearUserDetails?.call();
+      onUnauthorized?.call();
     }
 
-    // Create custom exception
-    final apiException = ApiException(
-      message: errorMessage,
-      statusCode: err.response?.statusCode,
-      errors: err.response?.data is Map<String, dynamic> 
-          ? err.response?.data as Map<String, dynamic>
-          : null,
+    // Transform DioException to NetworkException with proper error handling
+    final networkException = _transformError(err);
+    handler.reject(
+      DioException(
+        requestOptions: err.requestOptions,
+        response: err.response,
+        type: err.type,
+        error: networkException,
+        message: networkException.message,
+      ),
     );
-
-    handler.next(DioException(
-      requestOptions: err.requestOptions,
-      error: apiException,
-      response: err.response,
-      type: err.type,
-    ));
   }
 
-  String _getErrorMessage(DioException error) {
+  NetworkException _transformError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
-        return 'Connection timeout. Please check your internet connection.';
       case DioExceptionType.sendTimeout:
-        return 'Request timeout. Please try again.';
       case DioExceptionType.receiveTimeout:
-        return 'Response timeout. Please try again.';
+        return NetworkException(
+          message: 'Request timeout. Please check your internet connection.',
+          statusCode: error.response?.statusCode,
+        );
+
       case DioExceptionType.badResponse:
-        return _handleHttpError(error.response?.statusCode);
+        return _handleBadResponse(error);
+
       case DioExceptionType.cancel:
-        return 'Request was cancelled.';
+        return NetworkException(
+          message: 'Request was cancelled',
+          statusCode: error.response?.statusCode,
+        );
+
       case DioExceptionType.connectionError:
-        return 'No internet connection. Please check your network.';
-      case DioExceptionType.badCertificate:
-        return 'Certificate verification failed.';
-      case DioExceptionType.unknown:
-      return error.message ?? 'An unexpected error occurred.';
+        return NetworkException(
+          message: 'No internet connection. Please check your network.',
+          statusCode: error.response?.statusCode,
+        );
+
+      default:
+        return NetworkException(
+          message:
+              'An unexpected error occurred: ${error.message ?? 'Unknown error'}',
+          statusCode: error.response?.statusCode,
+        );
     }
   }
 
-  String _handleHttpError(int? statusCode) {
-    switch (statusCode) {
-      case 400:
-        return 'Bad request. Please check your input.';
-      case 401:
-        return 'Unauthorized. Please login again.';
-      case 403:
-        return 'Access forbidden. You don\'t have permission.';
-      case 404:
-        return 'Resource not found.';
-      case 422:
-        return 'Validation error. Please check your input.';
-      case 500:
-        return 'Internal server error. Please try again later.';
-      case 502:
-        return 'Bad gateway. Please try again later.';
-      case 503:
-        return 'Service unavailable. Please try again later.';
-      default:
-        return 'Server error ($statusCode). Please try again.';
+  NetworkException _handleBadResponse(DioException error) {
+    final response = error.response;
+
+    if (response?.data is Map<String, dynamic>) {
+      final responseData = response!.data as Map<String, dynamic>;
+
+      return NetworkException(
+        message:
+            responseData['message'] ??
+            responseData['error'] ??
+            'Request failed with status: ${response.statusCode}',
+        statusCode: response.statusCode,
+        errors: responseData['errors'],
+      );
+    } else {
+      return NetworkException(
+        message:
+            'Request failed with status: ${response?.statusCode ?? 'Unknown'}',
+        statusCode: response?.statusCode,
+      );
     }
   }
 }

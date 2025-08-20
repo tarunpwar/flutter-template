@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_template/core/utils/helpers/connectivity_wrapper.dart';
 import 'package:flutter_template/presentation/home/home_screen.dart';
 
 class AppRouter {
@@ -14,7 +15,9 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
      switch (settings.name) {
       case loginRoute:
-        return MaterialPageRoute(builder: (_) => LoginScreen());
+        return MaterialPageRoute(
+          builder: (_) => ConnectivityWrapper(child: LoginScreen()),
+        );
       case homeRoute:
         return MaterialPageRoute(builder: (_) => MyHomePage());
       case profileRoute:
