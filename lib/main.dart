@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/app/app.dart';
 import 'package:flutter_template/core/di/service_locator.dart';
-import 'package:flutter_template/presentation/user/user_viewmodel.dart';
+import 'package:flutter_template/presentation/user/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'core/di/app_dependencies.dart';
