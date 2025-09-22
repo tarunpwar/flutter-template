@@ -10,11 +10,6 @@ import 'interceptors/error_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
 
 class ApiService {
-  static ApiService? _instance;
-  late Dio _dio;
-
-  // Base URL - change this to your API base URL
-  final String _baseUrl = AppConfig.apiBaseUrl;
   // final Map<String, String> _defaultHeaders = {
   //   'Content-Type': 'application/json',
   //   'Accept': 'application/json',
@@ -32,25 +27,12 @@ class ApiService {
     _initializeDio();
   }
 
-  void _initializeDio() {
-    _dio.options = BaseOptions(
-      baseUrl: _baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    );
+  static ApiService? _instance;
 
-    // Add interceptors
-    _dio.interceptors.add(ErrorInterceptor());
+  // Base URL - change this to your API base URL
+  final String _baseUrl = AppConfig.apiBaseUrl;
 
-    if (kDebugMode) {
-      _dio.interceptors.add(LoggingInterceptor());
-    }
-  }
+  late Dio _dio;
 
   // Set authorization token
   void setAuthToken(String token) {
@@ -199,6 +181,32 @@ class ApiService {
     }
   }
 
+  // Cancel all requests
+  void cancelAllRequests() {
+    _dio.close(force: true);
+    _initializeDio();
+  }
+
+  void _initializeDio() {
+    _dio.options = BaseOptions(
+      baseUrl: _baseUrl,
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    // Add interceptors
+    _dio.interceptors.add(ErrorInterceptor());
+
+    if (kDebugMode) {
+      _dio.interceptors.add(LoggingInterceptor());
+    }
+  }
+
   // Handle successful response
   ApiResponse<T> _handleResponse<T>(
     Response response,
@@ -251,12 +259,6 @@ class ApiService {
           data['error'] as String?;
     }
     return null;
-  }
-
-  // Cancel all requests
-  void cancelAllRequests() {
-    _dio.close(force: true);
-    _initializeDio();
   }
 }
 

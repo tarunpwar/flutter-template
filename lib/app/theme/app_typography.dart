@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
 
 class AppTypography {
+  // Body Text Styles
+  static TextStyle bodyLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0,
+    height: 1.5,
+  );
+
+  static TextStyle bodyMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.01,
+    height: 1.5,
+  );
+
+  static TextStyle bodySmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.02,
+    height: 1.5,
+  );
+
   // Display Text Styles
   static TextStyle displayLarge = TextStyle(
     fontSize: 32,
@@ -45,50 +67,6 @@ class AppTypography {
     height: 1.35,
   );
 
-  // Title Text Styles
-  static TextStyle titleLarge = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0,
-    height: 1.4,
-  );
-
-  static TextStyle titleMedium = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.01,
-    height: 1.4,
-  );
-
-  static TextStyle titleSmall = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.01,
-    height: 1.45,
-  );
-
-  // Body Text Styles
-  static TextStyle bodyLarge = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0,
-    height: 1.5,
-  );
-
-  static TextStyle bodyMedium = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0.01,
-    height: 1.5,
-  );
-
-  static TextStyle bodySmall = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0.02,
-    height: 1.5,
-  );
-
   // Label Text Styles
   static TextStyle labelLarge = TextStyle(
     fontSize: 14,
@@ -109,5 +87,27 @@ class AppTypography {
     fontWeight: FontWeight.w500,
     letterSpacing: 0.03,
     height: 1.4,
+  );
+
+  // Title Text Styles
+  static TextStyle titleLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0,
+    height: 1.4,
+  );
+
+  static TextStyle titleMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.01,
+    height: 1.4,
+  );
+
+  static TextStyle titleSmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.01,
+    height: 1.45,
   );
 }

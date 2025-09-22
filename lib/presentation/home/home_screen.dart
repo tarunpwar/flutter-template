@@ -8,6 +8,20 @@ import '../../core/widgets/connection_status_widget.dart';
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
+  String _getConnectionTypes(List<ConnectivityResult> results) {
+    if (results.isEmpty ||
+        results.every((result) => result == ConnectivityResult.none)) {
+      return 'No Connection';
+    }
+
+    final types = results
+        .where((result) => result != ConnectivityResult.none)
+        .map((result) => result.name)
+        .toList();
+
+    return types.join(', ');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,18 +104,5 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getConnectionTypes(List<ConnectivityResult> results) {
-    if (results.isEmpty || results.every((result) => result == ConnectivityResult.none)) {
-      return 'No Connection';
-    }
-    
-    final types = results
-        .where((result) => result != ConnectivityResult.none)
-        .map((result) => result.name)
-        .toList();
-    
-    return types.join(', ');
   }
 }

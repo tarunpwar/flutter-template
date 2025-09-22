@@ -5,12 +5,15 @@ enum Flavor {
 }
 
 class FlavorUtils {
-  String baseUrl = "";
-  FlavorUtils._internal();
-  static final FlavorUtils _instance = FlavorUtils._internal();
   factory FlavorUtils() {
     return _instance;
   }
+
+  FlavorUtils._internal();
+
+  String baseUrl = "";
+
+  static final FlavorUtils _instance = FlavorUtils._internal();
 
   late Flavor _flavor;
 

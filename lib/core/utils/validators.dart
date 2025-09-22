@@ -303,28 +303,6 @@ class Validators {
     return null;
   }
 
-  // Helper method for Luhn algorithm
-  static bool _isValidLuhn(String cardNumber) {
-    int sum = 0;
-    bool isEven = false;
-
-    for (int i = cardNumber.length - 1; i >= 0; i--) {
-      int digit = int.parse(cardNumber[i]);
-
-      if (isEven) {
-        digit *= 2;
-        if (digit > 9) {
-          digit = digit ~/ 10 + digit % 10;
-        }
-      }
-
-      sum += digit;
-      isEven = !isEven;
-    }
-
-    return sum % 10 == 0;
-  }
-
   // Combine multiple validators
   static String? Function(String?) combine(List<String? Function(String?)> validators) {
     return (String? value) {
@@ -349,6 +327,28 @@ class Validators {
     }
 
     return null;
+  }
+
+  // Helper method for Luhn algorithm
+  static bool _isValidLuhn(String cardNumber) {
+    int sum = 0;
+    bool isEven = false;
+
+    for (int i = cardNumber.length - 1; i >= 0; i--) {
+      int digit = int.parse(cardNumber[i]);
+
+      if (isEven) {
+        digit *= 2;
+        if (digit > 9) {
+          digit = digit ~/ 10 + digit % 10;
+        }
+      }
+
+      sum += digit;
+      isEven = !isEven;
+    }
+
+    return sum % 10 == 0;
   }
 }
 

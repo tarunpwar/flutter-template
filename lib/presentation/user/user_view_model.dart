@@ -7,8 +7,6 @@ import '../../features/user/user_repository.dart';
 enum ViewState { idle, loading, error, success }
 
 class UserViewModel extends ChangeNotifier {
-  final UserRepository _userRepository;
-
   UserViewModel(this._userRepository);
 
   // Factory constructor for global initialization
@@ -16,29 +14,22 @@ class UserViewModel extends ChangeNotifier {
     return UserViewModel(sl.get<UserRepository>());
   }
 
-  ViewState _viewState = ViewState.idle;
   String? _errorMessage;
   UserModel? _selectedUser;
+  final UserRepository _userRepository;
   List<UserModel> _users = [];
+  ViewState _viewState = ViewState.idle;
 
   // Getters
   ViewState get viewState => _viewState;
+
   String? get errorMessage => _errorMessage;
+
   UserModel? get selectedUser => _selectedUser;
+
   List<UserModel> get users => _users;
+
   bool get isLoading => _viewState == ViewState.loading;
-
-  // Set view state
-  void _setViewState(ViewState state) {
-    _viewState = state;
-    notifyListeners();
-  }
-
-  // Set error
-  void _setError(String message) {
-    _errorMessage = message;
-    _setViewState(ViewState.error);
-  }
 
   // Get user by ID
   Future<void> getUser(int userId) async {
@@ -163,5 +154,17 @@ class UserViewModel extends ChangeNotifier {
   void clearSelectedUser() {
     _selectedUser = null;
     notifyListeners();
+  }
+
+  // Set view state
+  void _setViewState(ViewState state) {
+    _viewState = state;
+    notifyListeners();
+  }
+
+  // Set error
+  void _setError(String message) {
+    _errorMessage = message;
+    _setViewState(ViewState.error);
   }
 }

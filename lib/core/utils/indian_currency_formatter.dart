@@ -53,37 +53,6 @@ class IndianCurrencyFormatter {
     return formattedAmount;
   }
 
-  /// Adds Indian number system commas (lakhs, crores)
-  /// Example: 1234567.89 -> 12,34,567.89
-  static String _addIndianCommas(String amount) {
-    List<String> parts = amount.split('.');
-    String integerPart = parts[0];
-    String decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
-
-    if (integerPart.length <= 3) {
-      return amount;
-    }
-
-    String result = '';
-    int length = integerPart.length;
-
-    // Add commas in Indian format
-    for (int i = 0; i < length; i++) {
-      result += integerPart[i];
-      int remainingDigits = length - i - 1;
-
-      if (remainingDigits > 0) {
-        if (remainingDigits % 2 == 0 && remainingDigits != 2) {
-          result += ',';
-        } else if (remainingDigits == 3) {
-          result += ',';
-        }
-      }
-    }
-
-    return result + decimalPart;
-  }
-
   /// Formats amount as compact Indian currency (with K, L, Cr suffixes)
   /// Example: 150000 -> ₹1.5L, 10000000 -> ₹1Cr
   static String formatCompact(
@@ -152,19 +121,50 @@ class IndianCurrencyFormatter {
     double amount = double.tryParse(cleaned) ?? 0.0;
     return isNegative ? -amount : amount;
   }
+
+  /// Adds Indian number system commas (lakhs, crores)
+  /// Example: 1234567.89 -> 12,34,567.89
+  static String _addIndianCommas(String amount) {
+    List<String> parts = amount.split('.');
+    String integerPart = parts[0];
+    String decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
+
+    if (integerPart.length <= 3) {
+      return amount;
+    }
+
+    String result = '';
+    int length = integerPart.length;
+
+    // Add commas in Indian format
+    for (int i = 0; i < length; i++) {
+      result += integerPart[i];
+      int remainingDigits = length - i - 1;
+
+      if (remainingDigits > 0) {
+        if (remainingDigits % 2 == 0 && remainingDigits != 2) {
+          result += ',';
+        } else if (remainingDigits == 3) {
+          result += ',';
+        }
+      }
+    }
+
+    return result + decimalPart;
+  }
 }
 
 /// TextInputFormatter for Indian currency input fields
 class IndianCurrencyInputFormatter extends TextInputFormatter {
-  final int precision;
-  final bool showSymbol;
-  final bool allowNegative;
-
   IndianCurrencyInputFormatter({
     this.precision = 2,
     this.showSymbol = true,
     this.allowNegative = true,
   });
+
+  final bool allowNegative;
+  final int precision;
+  final bool showSymbol;
 
   @override
   TextEditingValue formatEditUpdate(

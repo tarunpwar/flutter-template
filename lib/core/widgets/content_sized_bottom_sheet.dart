@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ContentSizedBottomSheet extends StatelessWidget {
-  final Widget child;
-  final double? maxHeight;
-  final EdgeInsetsGeometry? padding;
-  final BorderRadius? borderRadius;
-  final Color? backgroundColor;
-  final bool isDismissible;
-  final bool enableDrag;
-
   const ContentSizedBottomSheet({
     super.key,
     required this.child,
@@ -19,6 +11,45 @@ class ContentSizedBottomSheet extends StatelessWidget {
     this.isDismissible = true,
     this.enableDrag = true,
   });
+
+  final Color? backgroundColor;
+  final BorderRadius? borderRadius;
+  final Widget child;
+  final bool enableDrag;
+  final bool isDismissible;
+  final double? maxHeight;
+  final EdgeInsetsGeometry? padding;
+
+  /// Static method to show the bottom sheet
+  static Future<T?> show<T>({
+    required BuildContext context,
+    required Widget child,
+    double? maxHeight,
+    EdgeInsetsGeometry? padding,
+    BorderRadius? borderRadius,
+    Color? backgroundColor,
+    bool isDismissible = true,
+    bool enableDrag = true,
+    bool useRootNavigator = false,
+  }) {
+    return showModalBottomSheet<T>(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: isDismissible,
+      enableDrag: enableDrag,
+      useRootNavigator: useRootNavigator,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ContentSizedBottomSheet(
+        maxHeight: maxHeight,
+        padding: padding,
+        borderRadius: borderRadius,
+        backgroundColor: backgroundColor,
+        isDismissible: isDismissible,
+        enableDrag: enableDrag,
+        child: child,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,77 +95,11 @@ class ContentSizedBottomSheet extends StatelessWidget {
       ),
     );
   }
-
-  /// Static method to show the bottom sheet
-  static Future<T?> show<T>({
-    required BuildContext context,
-    required Widget child,
-    double? maxHeight,
-    EdgeInsetsGeometry? padding,
-    BorderRadius? borderRadius,
-    Color? backgroundColor,
-    bool isDismissible = true,
-    bool enableDrag = true,
-    bool useRootNavigator = false,
-  }) {
-    return showModalBottomSheet<T>(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: isDismissible,
-      enableDrag: enableDrag,
-      useRootNavigator: useRootNavigator,
-      backgroundColor: Colors.transparent,
-      builder: (context) => ContentSizedBottomSheet(
-        maxHeight: maxHeight,
-        padding: padding,
-        borderRadius: borderRadius,
-        backgroundColor: backgroundColor,
-        isDismissible: isDismissible,
-        enableDrag: enableDrag,
-        child: child,
-      ),
-    );
-  }
 }
 
 // Example usage widget
 class BottomSheetExample extends StatelessWidget {
   const BottomSheetExample({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Content-Sized Bottom Sheet'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => _showSmallBottomSheet(context),
-              child: const Text('Show Small Bottom Sheet'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _showMediumBottomSheet(context),
-              child: const Text('Show Medium Bottom Sheet'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _showLargeBottomSheet(context),
-              child: const Text('Show Large Bottom Sheet'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _showCustomStyledBottomSheet(context),
-              child: const Text('Show Custom Styled Bottom Sheet'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   void _showSmallBottomSheet(BuildContext context) {
     ContentSizedBottomSheet.show(
@@ -274,6 +239,39 @@ class BottomSheetExample extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Content-Sized Bottom Sheet')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => _showSmallBottomSheet(context),
+              child: const Text('Show Small Bottom Sheet'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => _showMediumBottomSheet(context),
+              child: const Text('Show Medium Bottom Sheet'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => _showLargeBottomSheet(context),
+              child: const Text('Show Large Bottom Sheet'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => _showCustomStyledBottomSheet(context),
+              child: const Text('Show Custom Styled Bottom Sheet'),
+            ),
+          ],
+        ),
       ),
     );
   }

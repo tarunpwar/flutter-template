@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class DateParser {
   // Private constructor to prevent instantiation
   DateParser._();
-  
+
   // Common date format patterns
   static const Map<String, String> _commonFormats = {
     'iso8601': "yyyy-MM-ddTHH:mm:ss.SSSZ",

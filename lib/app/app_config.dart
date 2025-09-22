@@ -9,13 +9,13 @@ enum Environment {
 
 class AppConfig {
   static Environment _environment = Environment.dev;
-  
+
   static Environment get environment => _environment;
-  
+
   static void setEnvironment(Environment env) {
     _environment = env;
   }
-  
+
   // Load environment-specific .env file
   static Future<void> loadEnvFile() async {
     String envFile;
@@ -45,34 +45,34 @@ class AppConfig {
       }
     }
   }
-  
+
   static String get apiBaseUrl => dotenv.env['API_BASE_URL'] ?? 'https://api.yourapp.com';
-  
+
   static String get apiKey => dotenv.env['API_KEY'] ?? '';
-  
+
   static String get databaseUrl => dotenv.env['DATABASE_URL'] ?? '';
-  
+
   static String get firebaseProjectId => dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
-  
+
   static String get appName => dotenv.env['APP_NAME'] ?? 'YourApp';
-  
+
   static bool get enableLogging => dotenv.env['ENABLE_LOGGING']?.toLowerCase() == 'true';
-  
+
   static bool get enableAnalytics => dotenv.env['ENABLE_ANALYTICS']?.toLowerCase() == 'true';
-  
+
   static String get googleMapsApiKey => dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
-  
+
   static String get stripePublishableKey => dotenv.env['STRIPE_PUBLISHABLE_KEY'] ?? '';
-  
+
   static String get stripeSecretKey => dotenv.env['STRIPE_SECRET_KEY'] ?? '';
-  
+
   static String get oneSignalAppId => dotenv.env['ONESIGNAL_APP_ID'] ?? '';
-  
+
   // Get any environment variable
   static String getEnv(String key, {String defaultValue = ''}) {
     return dotenv.env[key] ?? defaultValue;
   }
-  
+
   // Check if we're in debug mode
   static bool get isDebug => enableLogging && (_environment == Environment.dev || _environment == Environment.staging);
 }

@@ -2,21 +2,21 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class NetworkException implements Exception {
+  const NetworkException({required this.message, this.statusCode, this.errors});
+
+  final Map<String, dynamic>? errors;
   final String message;
   final int? statusCode;
-  final Map<String, dynamic>? errors;
-
-  const NetworkException({required this.message, this.statusCode, this.errors});
 
   @override
   String toString() => message;
 }
 
 class ErrorInterceptor extends Interceptor {
-  final VoidCallback? onUnauthorized;
-  final VoidCallback? onClearUserDetails;
-
   ErrorInterceptor({this.onUnauthorized, this.onClearUserDetails});
+
+  final VoidCallback? onClearUserDetails;
+  final VoidCallback? onUnauthorized;
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {

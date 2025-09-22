@@ -11,11 +11,6 @@ enum UIStateType {
 }
 
 class UIState<T> {
-  final UIStateType type;
-  final T? data;
-  final String? message;
-  final dynamic customData;
-
   const UIState._({
     required this.type,
     this.data,
@@ -23,11 +18,9 @@ class UIState<T> {
     this.customData,
   });
 
-  // Factory constructors for each state
-  factory UIState.initial() => const UIState._(type: UIStateType.initial);
-
-  factory UIState.loading({String? message}) => UIState._(
-        type: UIStateType.loading,
+  factory UIState.custom({dynamic customData, String? message}) => UIState._(
+    type: UIStateType.custom,
+    customData: customData,
         message: message,
       );
 
@@ -36,29 +29,63 @@ class UIState<T> {
         message: message ?? 'No data available',
       );
 
-  factory UIState.success(T data, {String? message}) => UIState._(
-        type: UIStateType.success,
-        data: data,
+  factory UIState.error(String message) =>
+      UIState._(type: UIStateType.error,
         message: message,
       );
 
-  factory UIState.error(String message) => UIState._(
-        type: UIStateType.error,
+  // Factory constructors for each state
+  factory UIState.initial() => const UIState._(type: UIStateType.initial);
+
+  factory UIState.loading({String? message}) =>
+      UIState._(type: UIStateType.loading,
         message: message,
       );
 
-  factory UIState.custom({dynamic customData, String? message}) => UIState._(
-        type: UIStateType.custom,
-        customData: customData,
+  factory UIState.success(T data, {String? message}) =>
+      UIState._(type: UIStateType.success, data: data,
         message: message,
       );
+
+  final dynamic customData;
+  final T? data;
+  final String? message;
+  final UIStateType type;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is UIState<T> &&
+        other.type == type &&
+        other.data == data &&
+        other.message == message &&
+        other.customData == customData;
+  }
+
+  @override
+  int get hashCode {
+    return type.hashCode ^
+        data.hashCode ^
+        message.hashCode ^
+        customData.hashCode;
+  }
+
+  @override
+  String toString() {
+    return 'UIState(type: $type, data: $data, message: $message, customData: $customData)';
+  }
 
   // Convenience getters
   bool get isInitial => type == UIStateType.initial;
+
   bool get isLoading => type == UIStateType.loading;
+
   bool get isEmpty => type == UIStateType.empty;
+
   bool get isSuccess => type == UIStateType.success;
+
   bool get isError => type == UIStateType.error;
+
   bool get isCustom => type == UIStateType.custom;
 
   // Pattern matching method
@@ -110,26 +137,6 @@ class UIState<T> {
         return custom?.call(customData, message);
     }
   }
-
-  @override
-  String toString() {
-    return 'UIState(type: $type, data: $data, message: $message, customData: $customData)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is UIState<T> &&
-        other.type == type &&
-        other.data == data &&
-        other.message == message &&
-        other.customData == customData;
-  }
-
-  @override
-  int get hashCode {
-    return type.hashCode ^ data.hashCode ^ message.hashCode ^ customData.hashCode;
-  }
 }
 
 
@@ -144,10 +151,15 @@ class UIStateNotifier<T> extends ChangeNotifier {
   }
 
   void setInitial() => setState(UIState<T>.initial());
+
   void setLoading({String? message}) => setState(UIState<T>.loading(message: message));
+
   void setEmpty({String? message}) => setState(UIState<T>.empty(message: message));
+
   void setSuccess(T data, {String? message}) => setState(UIState<T>.success(data, message: message));
+
   void setError(String message) => setState(UIState<T>.error(message));
+
   void setCustom({dynamic customData, String? message}) => 
       setState(UIState<T>.custom(customData: customData, message: message));
 }
@@ -162,6 +174,12 @@ class ExampleUsage extends StatefulWidget {
 
 class _ExampleUsageState extends State<ExampleUsage> {
   final UIStateNotifier<List<String>> _notifier = UIStateNotifier<List<String>>();
+
+  @override
+  void dispose() {
+    _notifier.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -289,11 +307,5 @@ class _ExampleUsageState extends State<ExampleUsage> {
         child: const Icon(Icons.refresh),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _notifier.dispose();
-    super.dispose();
   }
 }

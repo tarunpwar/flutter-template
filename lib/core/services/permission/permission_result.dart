@@ -2,11 +2,6 @@ import 'permission_types.dart';
 
 /// Result class for permission operations
 class PermissionResult {
-  final AppPermissionStatus status;
-  final String message;
-  final bool isGranted;
-  final bool canShowRationale;
-
   const PermissionResult({
     required this.status,
     required this.message,
@@ -14,20 +9,20 @@ class PermissionResult {
     this.canShowRationale = false,
   });
 
-  factory PermissionResult.granted() {
-    return const PermissionResult(
-      status: AppPermissionStatus.granted,
-      message: 'Permission granted',
-      isGranted: true,
-    );
-  }
-
   factory PermissionResult.denied([String? customMessage]) {
     return PermissionResult(
       status: AppPermissionStatus.denied,
       message: customMessage ?? 'Permission denied',
       isGranted: false,
       canShowRationale: true,
+    );
+  }
+
+  factory PermissionResult.granted() {
+    return const PermissionResult(
+      status: AppPermissionStatus.granted,
+      message: 'Permission granted',
+      isGranted: true,
     );
   }
 
@@ -46,6 +41,11 @@ class PermissionResult {
       isGranted: false,
     );
   }
+
+  final bool canShowRationale;
+  final bool isGranted;
+  final String message;
+  final AppPermissionStatus status;
 
   @override
   String toString() {

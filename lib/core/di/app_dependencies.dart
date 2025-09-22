@@ -5,10 +5,10 @@ import '../network/api_client.dart';
 import 'service_locator.dart';
 
 class AppDependencies {
-  static bool _initialized = false;
-
   // Global navigation key for handling unauthorized access
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  static bool _initialized = false;
 
   static Future<void> initialize() async {
     if (_initialized) return;
@@ -26,6 +26,13 @@ class AppDependencies {
     sl.register<UserRepository>(UserRepository(sl.get<ApiClient>()));
 
     _initialized = true;
+  }
+
+  static bool get isInitialized => _initialized;
+
+  static void reset() {
+    _initialized = false;
+    sl.clear();
   }
 
   static void _handleUnauthorized() {
@@ -47,12 +54,5 @@ class AppDependencies {
     // Example: SharedPreferences, secure storage, etc.
     // final prefs = await SharedPreferences.getInstance();
     // await prefs.clear();
-  }
-
-  static bool get isInitialized => _initialized;
-
-  static void reset() {
-    _initialized = false;
-    sl.clear();
   }
 }

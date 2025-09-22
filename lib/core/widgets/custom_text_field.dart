@@ -2,29 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTextField extends StatefulWidget {
-  final String? label;
-  final String? hint;
-  final String? initialValue;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-  final void Function()? onTap;
-  final void Function(String)? onSubmitted;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final bool obscureText;
-  final bool readOnly;
-  final bool enabled;
-  final int? maxLines;
-  final int? minLines;
-  final int? maxLength;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
-  final List<TextInputFormatter>? inputFormatters;
-  final FocusNode? focusNode;
-  final EdgeInsetsGeometry? contentPadding;
-  final bool autofocus;
-
   const AppTextField({
     super.key,
     this.label,
@@ -51,6 +28,29 @@ class AppTextField extends StatefulWidget {
     this.autofocus = false,
   });
 
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final void Function()? onTap;
+  final void Function(String)? onSubmitted;
+  final bool autofocus;
+  final EdgeInsetsGeometry? contentPadding;
+  final TextEditingController? controller;
+  final bool enabled;
+  final FocusNode? focusNode;
+  final String? hint;
+  final String? initialValue;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType keyboardType;
+  final String? label;
+  final int? maxLength;
+  final int? maxLines;
+  final int? minLines;
+  final bool obscureText;
+  final Widget? prefixIcon;
+  final bool readOnly;
+  final Widget? suffixIcon;
+  final TextInputAction textInputAction;
+
   @override
   State<AppTextField> createState() => _AppTextFieldState();
 }
@@ -62,6 +62,24 @@ class _AppTextFieldState extends State<AppTextField> {
   void initState() {
     super.initState();
     _obscureText = widget.obscureText;
+  }
+
+  Widget? _buildSuffixIcon() {
+    if (widget.obscureText) {
+      return IconButton(
+        icon: Icon(
+          _obscureText ? Icons.visibility_off : Icons.visibility,
+          size: 20,
+        ),
+        onPressed: () {
+          setState(() {
+            _obscureText = !_obscureText;
+          });
+        },
+      );
+    }
+
+    return widget.suffixIcon;
   }
 
   @override
@@ -101,23 +119,5 @@ class _AppTextFieldState extends State<AppTextField> {
         ),
       ],
     );
-  }
-
-  Widget? _buildSuffixIcon() {
-    if (widget.obscureText) {
-      return IconButton(
-        icon: Icon(
-          _obscureText ? Icons.visibility_off : Icons.visibility,
-          size: 20,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscureText = !_obscureText;
-          });
-        },
-      );
-    }
-
-    return widget.suffixIcon;
   }
 }

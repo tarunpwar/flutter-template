@@ -4,9 +4,9 @@ import '../../shared/models/api_response.dart';
 import 'user_model.dart';
 
 class UserRepository {
-  final ApiClient _apiClient;
-
   UserRepository(this._apiClient);
+
+  final ApiClient _apiClient;
 
   Future<ApiResponse<UserModel>> getUser(int userId) async {
     return await _apiClient.get<UserModel>(

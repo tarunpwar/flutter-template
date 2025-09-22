@@ -7,9 +7,11 @@ import '../network/api_client.dart';
 ServiceLocator get sl => ServiceLocator();
 
 class ServiceLocator {
-  static final ServiceLocator _instance = ServiceLocator._internal();
   factory ServiceLocator() => _instance;
+
   ServiceLocator._internal();
+
+  static final ServiceLocator _instance = ServiceLocator._internal();
 
   final Map<Type, dynamic> _services = {};
 

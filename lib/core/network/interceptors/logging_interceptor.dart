@@ -5,15 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
 class LoggingInterceptor extends Interceptor {
-  final Logger _logger;
-  final bool logRequestHeaders;
-  final bool logRequestBody;
-  final bool logResponseHeaders;
-  final bool logResponseBody;
-  final bool logErrors;
-  final List<String> excludeHeaders;
-  final List<String> sensitiveFields;
-
   LoggingInterceptor({
     Logger? logger,
     this.logRequestHeaders = true,
@@ -34,6 +25,24 @@ class LoggingInterceptor extends Interceptor {
           ),
         );
 
+  final List<String> excludeHeaders;
+  final bool logErrors;
+  final bool logRequestBody;
+  final bool logRequestHeaders;
+  final bool logResponseBody;
+  final bool logResponseHeaders;
+  final List<String> sensitiveFields;
+
+  final Logger _logger;
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    if (logErrors) {
+      _logError(err);
+    }
+    super.onError(err, handler);
+  }
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     _logRequest(options);
@@ -44,14 +53,6 @@ class LoggingInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     _logResponse(response);
     super.onResponse(response, handler);
-  }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (logErrors) {
-      _logError(err);
-    }
-    super.onError(err, handler);
   }
 
   void _logRequest(RequestOptions options) {

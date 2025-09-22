@@ -6,15 +6,6 @@ import 'interceptors/cookie_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 
 class ApiClient {
-  late final Dio _dio;
-  final CookieInterceptor _cookieInterceptor;
-  final ErrorInterceptor _errorInterceptor;
-
-  static const String _baseUrl =
-      'https://api.example.com'; // Replace with your API base URL
-  static const Duration _connectionTimeout = Duration(seconds: 30);
-  static const Duration _receiveTimeout = Duration(seconds: 30);
-
   ApiClient({VoidCallback? onUnauthorized, VoidCallback? onClearUserDetails})
     : _cookieInterceptor = CookieInterceptor(),
       _errorInterceptor = ErrorInterceptor(
@@ -36,20 +27,15 @@ class ApiClient {
     _setupInterceptors();
   }
 
-  void _setupInterceptors() {
-    _dio.interceptors.addAll([
-      _cookieInterceptor,
-      _errorInterceptor,
-      if (kDebugMode)
-        LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-          requestHeader: true,
-          responseHeader: true,
-          error: true,
-        ),
-    ]);
-  }
+  static const String _baseUrl =
+      'https://api.example.com'; // Replace with your API base URL
+
+  static const Duration _connectionTimeout = Duration(seconds: 30);
+  static const Duration _receiveTimeout = Duration(seconds: 30);
+
+  final CookieInterceptor _cookieInterceptor;
+  late final Dio _dio;
+  final ErrorInterceptor _errorInterceptor;
 
   // Generic GET request
   Future<ApiResponse<T>> get<T>(
@@ -135,6 +121,44 @@ class ApiClient {
     }
   }
 
+  // Clear all cookies
+  void clearCookies() {
+    _cookieInterceptor.clearCookies();
+  }
+
+  // Get current cookies
+  Map<String, String> get cookies => _cookieInterceptor.cookies;
+
+  // Update base URL if needed
+  void updateBaseUrl(String newBaseUrl) {
+    _dio.options.baseUrl = newBaseUrl;
+  }
+
+  // Add custom header
+  void addHeader(String key, String value) {
+    _dio.options.headers[key] = value;
+  }
+
+  // Remove header
+  void removeHeader(String key) {
+    _dio.options.headers.remove(key);
+  }
+
+  void _setupInterceptors() {
+    _dio.interceptors.addAll([
+      _cookieInterceptor,
+      _errorInterceptor,
+      if (kDebugMode)
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          requestHeader: true,
+          responseHeader: true,
+          error: true,
+        ),
+    ]);
+  }
+
   // Handle successful response
   ApiResponse<T> _handleResponse<T>(
     Response response,
@@ -186,28 +210,5 @@ class ApiClient {
   // Handle generic errors
   ApiResponse<T> _handleGenericError<T>(dynamic error) {
     return ApiResponse.error(message: 'An unexpected error occurred: $error');
-  }
-
-  // Clear all cookies
-  void clearCookies() {
-    _cookieInterceptor.clearCookies();
-  }
-
-  // Get current cookies
-  Map<String, String> get cookies => _cookieInterceptor.cookies;
-
-  // Update base URL if needed
-  void updateBaseUrl(String newBaseUrl) {
-    _dio.options.baseUrl = newBaseUrl;
-  }
-
-  // Add custom header
-  void addHeader(String key, String value) {
-    _dio.options.headers[key] = value;
-  }
-
-  // Remove header
-  void removeHeader(String key) {
-    _dio.options.headers.remove(key);
   }
 }

@@ -7,6 +7,37 @@ import '../services/connectivity_service.dart';
 class ConnectionStatusWidget extends StatelessWidget {
   const ConnectionStatusWidget({super.key});
 
+  String _getConnectionType(List<ConnectivityResult> results) {
+    if (results.isEmpty ||
+        results.every((result) => result == ConnectivityResult.none)) {
+      return 'No Connection';
+    }
+
+    final types = results
+        .where((result) => result != ConnectivityResult.none)
+        .map((result) {
+          switch (result) {
+            case ConnectivityResult.wifi:
+              return 'WiFi';
+            case ConnectivityResult.mobile:
+              return 'Mobile';
+            case ConnectivityResult.ethernet:
+              return 'Ethernet';
+            case ConnectivityResult.bluetooth:
+              return 'Bluetooth';
+            case ConnectivityResult.vpn:
+              return 'VPN';
+            case ConnectivityResult.other:
+              return 'Other';
+            default:
+              return 'Unknown';
+          }
+        })
+        .toList();
+
+    return types.join(', ');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityService>(
@@ -49,34 +80,5 @@ class ConnectionStatusWidget extends StatelessWidget {
         );
       },
     );
-  }
-
-  String _getConnectionType(List<ConnectivityResult> results) {
-    if (results.isEmpty || results.every((result) => result == ConnectivityResult.none)) {
-      return 'No Connection';
-    }
-    
-    final types = results
-        .where((result) => result != ConnectivityResult.none)
-        .map((result) {
-          switch (result) {
-            case ConnectivityResult.wifi:
-              return 'WiFi';
-            case ConnectivityResult.mobile:
-              return 'Mobile';
-            case ConnectivityResult.ethernet:
-              return 'Ethernet';
-            case ConnectivityResult.bluetooth:
-              return 'Bluetooth';
-            case ConnectivityResult.vpn:
-              return 'VPN';
-            case ConnectivityResult.other:
-              return 'Other';
-            default:
-              return 'Unknown';
-          }
-        }).toList();
-    
-    return types.join(', ');
   }
 }

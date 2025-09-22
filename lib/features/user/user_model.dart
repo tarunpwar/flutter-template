@@ -1,9 +1,4 @@
 class UserModel {
-  final int id;
-  final String name;
-  final String email;
-  final String? avatar;
-
   const UserModel({
     required this.id,
     required this.name,
@@ -19,6 +14,11 @@ class UserModel {
       avatar: json['avatar'],
     );
   }
+
+  final String? avatar;
+  final String email;
+  final int id;
+  final String name;
 
   Map<String, dynamic> toJson() {
     return {

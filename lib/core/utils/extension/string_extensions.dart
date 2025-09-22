@@ -185,7 +185,7 @@ extension StringExtensions on String {
   }
 
   /// Converts first character to lowercase
-  String get uncapitalize {
+  String get unCapitalize {
     if (isEmpty) return this;
     return this[0].toLowerCase() + substring(1);
   }

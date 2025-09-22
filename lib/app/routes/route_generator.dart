@@ -3,14 +3,15 @@ import 'package:flutter_template/core/utils/helpers/connectivity_wrapper.dart';
 import 'package:flutter_template/presentation/home/home_screen.dart';
 
 class AppRouter {
+  static const String errorRoute = '/error';
+  static const String homeRoute = '/home';
   // static final GlobalKey<NavigatorState> navigatorKey =
   //     GlobalKey<NavigatorState>();
 
   static const String loginRoute = '/login';
-  static const String homeRoute = '/home';
+
   static const String profileRoute = '/profile';
   static const String settingsRoute = '/settings';
-  static const String errorRoute = '/error';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
      switch (settings.name) {
@@ -100,12 +101,12 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class ErrorScreen extends StatelessWidget {
-  final String routeName;
-
   const ErrorScreen({
     super.key,
     required this.routeName,
   });
+
+  final String routeName;
 
   @override
   Widget build(BuildContext context) {

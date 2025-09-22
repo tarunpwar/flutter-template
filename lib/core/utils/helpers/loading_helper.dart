@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FullScreenLoader {
-  static OverlayEntry? _overlayEntry;
   static bool _isShowing = false;
+  static OverlayEntry? _overlayEntry;
 
   /// Show the full screen loader
   /// Only one instance can exist at a time - subsequent calls will be ignored
@@ -44,15 +44,15 @@ class FullScreenLoader {
 }
 
 class _LoaderWidget extends StatefulWidget {
-  final String? message;
-  final Color backgroundColor;
-  final Color indicatorColor;
-
   const _LoaderWidget({
     this.message,
     required this.backgroundColor,
     required this.indicatorColor,
   });
+
+  final Color backgroundColor;
+  final Color indicatorColor;
+  final String? message;
 
   @override
   State<_LoaderWidget> createState() => _LoaderWidgetState();
@@ -62,6 +62,12 @@ class _LoaderWidgetState extends State<_LoaderWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -78,12 +84,6 @@ class _LoaderWidgetState extends State<_LoaderWidget>
       curve: Curves.easeInOut,
     ));
     _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override

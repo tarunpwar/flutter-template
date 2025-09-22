@@ -5,10 +5,6 @@ import 'package:provider/provider.dart';
 import '../../services/connectivity_service.dart';
 
 class ConnectivityWrapper extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onReconnectRefresh;
-  final bool enableAutoRefresh;
-
   const ConnectivityWrapper({
     super.key, 
     required this.child,
@@ -16,26 +12,16 @@ class ConnectivityWrapper extends StatefulWidget {
     this.enableAutoRefresh = true,
   });
 
+  final Widget child;
+  final bool enableAutoRefresh;
+  final VoidCallback? onReconnectRefresh;
+
   @override
   State<ConnectivityWrapper> createState() => _ConnectivityWrapperState();
 }
 
 class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   bool _dialogShown = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ConnectivityService>(
-      builder: (context, connectivityService, child) {
-        // Handle connection changes
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _handleConnectivityChange(context, connectivityService);
-        });
-
-        return widget.child;
-      },
-    );
-  }
 
   void _handleConnectivityChange(
     BuildContext context,
@@ -95,5 +81,19 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
       // Reset the refresh flag
       service.resetRefreshFlag();
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ConnectivityService>(
+      builder: (context, connectivityService, child) {
+        // Handle connection changes
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _handleConnectivityChange(context, connectivityService);
+        });
+
+        return widget.child;
+      },
+    );
   }
 }

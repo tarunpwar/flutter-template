@@ -40,6 +40,12 @@ class CookieInterceptor extends Interceptor {
     handler.next(response);
   }
 
+  void clearCookies() {
+    _cookies.clear();
+  }
+
+  Map<String, String> get cookies => Map.unmodifiable(_cookies);
+
   void _extractAndStoreCookie(String cookieHeader) {
     final cookie = cookieHeader.split(';').first;
     final parts = cookie.split('=');
@@ -49,10 +55,4 @@ class CookieInterceptor extends Interceptor {
       _cookies[name] = value;
     }
   }
-
-  void clearCookies() {
-    _cookies.clear();
-  }
-
-  Map<String, String> get cookies => Map.unmodifiable(_cookies);
 }

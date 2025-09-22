@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 class ConnectivityDialog extends StatelessWidget {
   const ConnectivityDialog({super.key});
 
+  Widget _buildTip(String tip) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4),
+      child: Text(tip, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -53,19 +60,6 @@ class ConnectivityDialog extends StatelessWidget {
             child: const Text('Waiting for connection...'),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTip(String tip) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 4),
-      child: Text(
-        tip,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey[600],
-        ),
       ),
     );
   }

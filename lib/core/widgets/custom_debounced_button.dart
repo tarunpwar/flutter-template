@@ -3,21 +3,6 @@ import 'package:flutter/material.dart';
 enum ButtonState { idle, pressed, loading }
 
 class CustomDebouncedButton extends StatefulWidget {
-  final String text;
-  final IconData? icon;
-  final VoidCallback? onPressed;
-  final Duration debounceDuration;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final Color? disabledBackgroundColor;
-  final Color? disabledForegroundColor;
-  final EdgeInsetsGeometry? padding;
-  final BorderRadius? borderRadius;
-  final double? elevation;
-  final Size? minimumSize;
-  final TextStyle? textStyle;
-  final double? iconSize;
-
   const CustomDebouncedButton({
     super.key,
     required this.text,
@@ -36,18 +21,38 @@ class CustomDebouncedButton extends StatefulWidget {
     this.iconSize = 20.0,
   });
 
+  final Color? backgroundColor;
+  final BorderRadius? borderRadius;
+  final Duration debounceDuration;
+  final Color? disabledBackgroundColor;
+  final Color? disabledForegroundColor;
+  final double? elevation;
+  final Color? foregroundColor;
+  final IconData? icon;
+  final double? iconSize;
+  final Size? minimumSize;
+  final VoidCallback? onPressed;
+  final EdgeInsetsGeometry? padding;
+  final String text;
+  final TextStyle? textStyle;
+
   @override
   State<CustomDebouncedButton> createState() => _CustomDebouncedButtonState();
 }
 
 class _CustomDebouncedButtonState extends State<CustomDebouncedButton>
     with TickerProviderStateMixin {
+  late AnimationController _animationController;
   ButtonState _currentState = ButtonState.idle;
   bool _isDisabled = false;
-  
-  late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,12 +67,6 @@ class _CustomDebouncedButtonState extends State<CustomDebouncedButton>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   void _handlePress() async {

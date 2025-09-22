@@ -9,114 +9,19 @@ import 'permission_types.dart';
 
 /// Production-ready Permission Manager
 class PermissionManager {
-  static PermissionManager? _instance;
-  static PermissionManager get instance => _instance ??= PermissionManager._();
-
   PermissionManager._();
 
-  // Permission status cache to reduce system calls
-  final Map<AppPermission, AppPermissionStatus> _statusCache = {};
+  static PermissionManager? _instance;
+  // Minimum time between permission requests (in milliseconds)
+  static const int _minimumRequestInterval = 1000;
 
   // Request timestamps to prevent spam requests
   final Map<AppPermission, DateTime> _lastRequestTime = {};
 
-  // Minimum time between permission requests (in milliseconds)
-  static const int _minimumRequestInterval = 1000;
+  // Permission status cache to reduce system calls
+  final Map<AppPermission, AppPermissionStatus> _statusCache = {};
 
-  /// Maps app permissions to permission_handler permissions
-  Permission _getPermissionFromAppPermission(AppPermission appPermission) {
-    switch (appPermission) {
-      case AppPermission.camera:
-        return Permission.camera;
-      case AppPermission.microphone:
-        return Permission.microphone;
-      case AppPermission.storage:
-        return Permission.storage;
-      case AppPermission.photos:
-        return Permission.photos;
-      case AppPermission.location:
-        return Permission.location;
-      case AppPermission.locationWhenInUse:
-        return Permission.locationWhenInUse;
-      case AppPermission.locationAlways:
-        return Permission.locationAlways;
-      case AppPermission.contacts:
-        return Permission.contacts;
-      case AppPermission.phone:
-        return Permission.phone;
-      case AppPermission.sms:
-        return Permission.sms;
-      case AppPermission.notification:
-        return Permission.notification;
-      case AppPermission.bluetooth:
-        return Permission.bluetooth;
-      case AppPermission.bluetoothScan:
-        return Permission.bluetoothScan;
-      case AppPermission.bluetoothAdvertise:
-        return Permission.bluetoothAdvertise;
-      case AppPermission.bluetoothConnect:
-        return Permission.bluetoothConnect;
-      case AppPermission.mediaLibrary:
-        return Permission.mediaLibrary;
-      case AppPermission.calendarRead:
-        return Permission.calendarFullAccess;
-      case AppPermission.calendarWrite:
-        return Permission.calendarWriteOnly;
-      case AppPermission.reminders:
-        return Permission.reminders;
-      case AppPermission.sensors:
-        return Permission.sensors;
-      case AppPermission.speech:
-        return Permission.speech;
-      case AppPermission.ignoreBatteryOptimizations:
-        return Permission.ignoreBatteryOptimizations;
-      case AppPermission.requestInstallPackages:
-        return Permission.requestInstallPackages;
-      case AppPermission.systemAlertWindow:
-        return Permission.systemAlertWindow;
-      case AppPermission.criticalAlerts:
-        return Permission.criticalAlerts;
-      case AppPermission.accessMediaLocation:
-        return Permission.accessMediaLocation;
-      case AppPermission.activityRecognition:
-        return Permission.activityRecognition;
-      case AppPermission.unknown:
-        return Permission.unknown;
-    }
-  }
-
-  /// Converts PermissionStatus to AppPermissionStatus
-  AppPermissionStatus _convertPermissionStatus(PermissionStatus status) {
-    switch (status) {
-      case PermissionStatus.granted:
-        return AppPermissionStatus.granted;
-      case PermissionStatus.denied:
-        return AppPermissionStatus.denied;
-      case PermissionStatus.permanentlyDenied:
-        return AppPermissionStatus.permanentlyDenied;
-      case PermissionStatus.restricted:
-        return AppPermissionStatus.restricted;
-      case PermissionStatus.limited:
-        return AppPermissionStatus.limited;
-      case PermissionStatus.provisional:
-        return AppPermissionStatus.provisional;
-    }
-  }
-
-  /// Check if enough time has passed since last request
-  bool _canMakeRequest(AppPermission permission) {
-    final lastRequest = _lastRequestTime[permission];
-    if (lastRequest == null) return true;
-
-    return DateTime.now().millisecondsSinceEpoch -
-            lastRequest.millisecondsSinceEpoch >
-        _minimumRequestInterval;
-  }
-
-  /// Update request timestamp
-  void _updateRequestTime(AppPermission permission) {
-    _lastRequestTime[permission] = DateTime.now();
-  }
+  static PermissionManager get instance => _instance ??= PermissionManager._();
 
   /// Get human-readable permission name
   String getPermissionName(AppPermission permission) {
@@ -432,6 +337,101 @@ class PermissionManager {
     return missing;
   }
 
+  /// Maps app permissions to permission_handler permissions
+  Permission _getPermissionFromAppPermission(AppPermission appPermission) {
+    switch (appPermission) {
+      case AppPermission.camera:
+        return Permission.camera;
+      case AppPermission.microphone:
+        return Permission.microphone;
+      case AppPermission.storage:
+        return Permission.storage;
+      case AppPermission.photos:
+        return Permission.photos;
+      case AppPermission.location:
+        return Permission.location;
+      case AppPermission.locationWhenInUse:
+        return Permission.locationWhenInUse;
+      case AppPermission.locationAlways:
+        return Permission.locationAlways;
+      case AppPermission.contacts:
+        return Permission.contacts;
+      case AppPermission.phone:
+        return Permission.phone;
+      case AppPermission.sms:
+        return Permission.sms;
+      case AppPermission.notification:
+        return Permission.notification;
+      case AppPermission.bluetooth:
+        return Permission.bluetooth;
+      case AppPermission.bluetoothScan:
+        return Permission.bluetoothScan;
+      case AppPermission.bluetoothAdvertise:
+        return Permission.bluetoothAdvertise;
+      case AppPermission.bluetoothConnect:
+        return Permission.bluetoothConnect;
+      case AppPermission.mediaLibrary:
+        return Permission.mediaLibrary;
+      case AppPermission.calendarRead:
+        return Permission.calendarFullAccess;
+      case AppPermission.calendarWrite:
+        return Permission.calendarWriteOnly;
+      case AppPermission.reminders:
+        return Permission.reminders;
+      case AppPermission.sensors:
+        return Permission.sensors;
+      case AppPermission.speech:
+        return Permission.speech;
+      case AppPermission.ignoreBatteryOptimizations:
+        return Permission.ignoreBatteryOptimizations;
+      case AppPermission.requestInstallPackages:
+        return Permission.requestInstallPackages;
+      case AppPermission.systemAlertWindow:
+        return Permission.systemAlertWindow;
+      case AppPermission.criticalAlerts:
+        return Permission.criticalAlerts;
+      case AppPermission.accessMediaLocation:
+        return Permission.accessMediaLocation;
+      case AppPermission.activityRecognition:
+        return Permission.activityRecognition;
+      case AppPermission.unknown:
+        return Permission.unknown;
+    }
+  }
+
+  /// Converts PermissionStatus to AppPermissionStatus
+  AppPermissionStatus _convertPermissionStatus(PermissionStatus status) {
+    switch (status) {
+      case PermissionStatus.granted:
+        return AppPermissionStatus.granted;
+      case PermissionStatus.denied:
+        return AppPermissionStatus.denied;
+      case PermissionStatus.permanentlyDenied:
+        return AppPermissionStatus.permanentlyDenied;
+      case PermissionStatus.restricted:
+        return AppPermissionStatus.restricted;
+      case PermissionStatus.limited:
+        return AppPermissionStatus.limited;
+      case PermissionStatus.provisional:
+        return AppPermissionStatus.provisional;
+    }
+  }
+
+  /// Check if enough time has passed since last request
+  bool _canMakeRequest(AppPermission permission) {
+    final lastRequest = _lastRequestTime[permission];
+    if (lastRequest == null) return true;
+
+    return DateTime.now().millisecondsSinceEpoch -
+            lastRequest.millisecondsSinceEpoch >
+        _minimumRequestInterval;
+  }
+
+  /// Update request timestamp
+  void _updateRequestTime(AppPermission permission) {
+    _lastRequestTime[permission] = DateTime.now();
+  }
+
   /// Create PermissionResult from status
   PermissionResult _createResultFromStatus(
     AppPermissionStatus status,
@@ -527,14 +527,6 @@ extension PermissionManagerExtensions on PermissionManager {
 
 /// Widget helper for handling permissions with UI
 class PermissionHandler extends StatefulWidget {
-  final AppPermission permission;
-  final Widget Function(BuildContext context, bool hasPermission) builder;
-  final Widget? loadingWidget;
-  final Widget? deniedWidget;
-  final String? rationale;
-  final VoidCallback? onPermissionDenied;
-  final VoidCallback? onPermissionGranted;
-
   const PermissionHandler({
     super.key,
     required this.permission,
@@ -546,14 +538,22 @@ class PermissionHandler extends StatefulWidget {
     this.onPermissionGranted,
   });
 
+  final Widget Function(BuildContext context, bool hasPermission) builder;
+  final Widget? deniedWidget;
+  final Widget? loadingWidget;
+  final VoidCallback? onPermissionDenied;
+  final VoidCallback? onPermissionGranted;
+  final AppPermission permission;
+  final String? rationale;
+
   @override
   State<PermissionHandler> createState() => _PermissionHandlerState();
 }
 
 class _PermissionHandlerState extends State<PermissionHandler> {
-  bool _isLoading = true;
-  bool _hasPermission = false;
   String? _errorMessage;
+  bool _hasPermission = false;
+  bool _isLoading = true;
 
   @override
   void initState() {

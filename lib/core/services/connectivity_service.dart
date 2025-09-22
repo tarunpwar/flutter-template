@@ -5,22 +5,42 @@ import 'dart:async';
 import '../../shared/mixins/connectivity_refresh_mixin.dart';
 
 class ConnectivityService extends ChangeNotifier {
-  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  ConnectivityService() {
+    _initConnectivity();
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
+  }
+
   List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   bool _hasConnection = false;
   bool _isFirstCheck = true;
   bool _shouldRefreshOnReconnect = false;
 
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
   List<ConnectivityResult> get connectionStatus => _connectionStatus;
+
   bool get hasConnection => _hasConnection;
+
   bool get isFirstCheck => _isFirstCheck;
+
   bool get shouldRefreshOnReconnect => _shouldRefreshOnReconnect;
 
-  ConnectivityService() {
-    _initConnectivity();
-    _connectivitySubscription = Connectivity()
-        .onConnectivityChanged
-        .listen(_updateConnectionStatus);
+  // Reset refresh flag after it's been handled
+  void resetRefreshFlag() {
+    _shouldRefreshOnReconnect = false;
+  }
+
+  // Force refresh trigger for manual refresh
+  void triggerRefresh() {
+    _shouldRefreshOnReconnect = true;
+    notifyListeners();
   }
 
   // Initialize connectivity check
@@ -53,23 +73,6 @@ class ConnectivityService extends ChangeNotifier {
       _isFirstCheck = false;
       notifyListeners();
     }
-  }
-
-  // Reset refresh flag after it's been handled
-  void resetRefreshFlag() {
-    _shouldRefreshOnReconnect = false;
-  }
-
-  // Force refresh trigger for manual refresh
-  void triggerRefresh() {
-    _shouldRefreshOnReconnect = true;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
   }
 }
 

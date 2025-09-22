@@ -5,11 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/storage_keys.dart';
 
 class StorageService {
-  static final StorageService _instance = StorageService._internal();
-  static StorageService get instance => _instance;
   StorageService._internal();
 
   late SharedPreferences sp;
+
+  static final StorageService _instance = StorageService._internal();
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
@@ -18,6 +18,8 @@ class StorageService {
       accessibility: KeychainAccessibility.first_unlock_this_device,
     ),
   );
+
+  static StorageService get instance => _instance;
 
   Future<void> init() async {
     sp = await SharedPreferences.getInstance();

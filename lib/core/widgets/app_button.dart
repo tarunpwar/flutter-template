@@ -4,17 +4,6 @@ enum AppButtonType { primary, secondary, outline, text }
 enum AppButtonSize { small, medium, large }
 
 class AppButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-  final AppButtonType type;
-  final AppButtonSize size;
-  final bool isLoading;
-  final Widget? icon;
-  final bool fullWidth;
-  final Color? backgroundColor;
-  final Color? textColor;
-  final EdgeInsetsGeometry? padding;
-
   const AppButton({
     super.key,
     required this.text,
@@ -29,16 +18,16 @@ class AppButton extends StatelessWidget {
     this.padding,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return SizedBox(
-      width: fullWidth ? double.infinity : null,
-      height: _getHeight(),
-      child: _buildButton(context, theme),
-    );
-  }
+  final Color? backgroundColor;
+  final bool fullWidth;
+  final Widget? icon;
+  final bool isLoading;
+  final VoidCallback? onPressed;
+  final EdgeInsetsGeometry? padding;
+  final AppButtonSize size;
+  final String text;
+  final Color? textColor;
+  final AppButtonType type;
 
   Widget _buildButton(BuildContext context, ThemeData theme) {
     final content = _buildContent();
@@ -182,5 +171,16 @@ class AppButton extends StatelessWidget {
       case AppButtonSize.large:
         return 20;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return SizedBox(
+      width: fullWidth ? double.infinity : null,
+      height: _getHeight(),
+      child: _buildButton(context, theme),
+    );
   }
 }

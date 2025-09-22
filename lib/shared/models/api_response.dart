@@ -1,10 +1,4 @@
 class ApiResponse<T> {
-  final bool success;
-  final String? message;
-  final T? data;
-  final int? statusCode;
-  final Map<String, dynamic>? errors;
-
   const ApiResponse({
     required this.success,
     this.message,
@@ -12,19 +6,6 @@ class ApiResponse<T> {
     this.statusCode,
     this.errors,
   });
-
-  factory ApiResponse.success({
-    T? data,
-    String? message,
-    int? statusCode,
-  }) {
-    return ApiResponse<T>(
-      success: true,
-      data: data,
-      message: message,
-      statusCode: statusCode,
-    );
-  }
 
   factory ApiResponse.error({
     String? message,
@@ -61,4 +42,19 @@ class ApiResponse<T> {
       );
     }
   }
+
+  factory ApiResponse.success({T? data, String? message, int? statusCode}) {
+    return ApiResponse<T>(
+      success: true,
+      data: data,
+      message: message,
+      statusCode: statusCode,
+    );
+  }
+
+  final T? data;
+  final Map<String, dynamic>? errors;
+  final String? message;
+  final int? statusCode;
+  final bool success;
 }

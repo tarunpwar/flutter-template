@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
+  const Failure(this.message, [this.statusCode]);
+
   final String message;
   final int? statusCode;
-  
-  const Failure(this.message, [this.statusCode]);
-  
+
   @override
   List<Object?> get props => [message, statusCode];
 }
@@ -27,9 +27,9 @@ class UnauthorizedFailure extends Failure {
 }
 
 class ValidationFailure extends Failure {
-  final Map<String, dynamic>? errors;
-  
   const ValidationFailure(String message, [this.errors]) : super(message, 422);
+
+  final Map<String, dynamic>? errors;
 }
 
 class TimeoutFailure extends Failure {

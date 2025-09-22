@@ -1,13 +1,13 @@
 class ApiException implements Exception {
-  final String message;
-  final int? statusCode;
-  final Map<String, dynamic>? errors;
-
   ApiException({
     required this.message,
     this.statusCode,
     this.errors,
   });
+
+  final Map<String, dynamic>? errors;
+  final String message;
+  final int? statusCode;
 
   @override
   String toString() {
@@ -24,8 +24,10 @@ class TimeoutException extends ApiException {
 }
 
 class UnauthorizedException extends ApiException {
-  UnauthorizedException({super.message = 'Unauthorized access', super.statusCode});
-      
+  UnauthorizedException({
+    super.message = 'Unauthorized access',
+    super.statusCode,
+  });
 }
 
 class ServerException extends ApiException {
